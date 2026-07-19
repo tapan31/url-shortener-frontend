@@ -36,7 +36,7 @@ const CreateNewShorten = ({ setOpen, refetch }) => {
         },
       });
 
-      const shortenUrl = `${import.meta.env.VITE_REACT_SUBDOMAIN + "/s/" + `${res.shortUrl}`}`;
+      const shortenUrl = `${import.meta.env.VITE_REACT_FRONTEND_URL + "/s/" + `${res.shortUrl}`}`;
       navigator.clipboard.writeText(shortenUrl).then(() => {
         toast.success("Short URL Copied to Clipboard", {
           position: "bottom-center",
@@ -45,7 +45,7 @@ const CreateNewShorten = ({ setOpen, refetch }) => {
         });
       });
 
-      // await refetch();
+      await refetch();
       reset();
       setOpen(false);
     } catch (error) {

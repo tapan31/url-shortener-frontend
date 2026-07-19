@@ -15,7 +15,11 @@ const ShortenItem = ({ originalUrl, shortUrl, clickCount, createdAt }) => {
   const navigate = useNavigate();
   const { token } = useStoreContext();
 
-  const subDomain = import.meta.env.VITE_REACT_SUBDOMAIN.replace(
+  // const subDomain = import.meta.env.VITE_REACT_SUBDOMAIN.replace(
+  //   /^https?:\/\//,
+  //   "",
+  // );
+  const subDomain = import.meta.env.VITE_REACT_FRONTEND_URL.replace(
     /^https?:\/\//,
     "",
   );
@@ -73,23 +77,23 @@ const ShortenItem = ({ originalUrl, shortUrl, clickCount, createdAt }) => {
       >
         <div className="flex-1 sm:space-y-1 max-w-full overflow-x-auto overflow-y-hidden ">
           <div className="text-slate-900 pb-1 sm:pb-0   flex items-center gap-2 ">
-            <a
+            {/* <a
               href={`${import.meta.env.VITE_REACT_SUBDOMAIN}/${shortUrl}`}
               target="_blank"
               className=" text-[17px]  font-montserrat font-[600] text-linkColor "
             >
               {subDomain + "/" + `${shortUrl}`}
-            </a>
+            </a> */}
 
-            {/* <Link
-              target="_"
+            <Link
+              target="_blank"
               className="text-[17px]  font-montserrat font-[600] text-linkColor"
               to={
-                import.meta.env.VITE_REACT_FRONT_END_URL + "/s/" + `${shortUrl}`
+                import.meta.env.VITE_REACT_FRONTEND_URL + "/s/" + `${shortUrl}`
               }
             >
               {subDomain + "/s/" + `${shortUrl}`}
-            </Link> */}
+            </Link>
             <FaExternalLinkAlt className="text-linkColor" />
           </div>
 
@@ -124,7 +128,8 @@ const ShortenItem = ({ originalUrl, shortUrl, clickCount, createdAt }) => {
         <div className="flex  flex-1  sm:justify-end items-center gap-4">
           <CopyToClipboard
             onCopy={() => setIsCopied(true)}
-            text={`${import.meta.env.VITE_REACT_SUBDOMAIN + "/s/" + `${shortUrl}`}`}
+            // text={`${import.meta.env.VITE_REACT_SUBDOMAIN + "/s/" + `${shortUrl}`}`}
+            text={`${import.meta.env.VITE_REACT_FRONTEND_URL + "/s/" + `${shortUrl}`}`}
           >
             <div className="flex cursor-pointer gap-1 items-center bg-btnColor py-2  font-semibold shadow-md shadow-slate-500 px-6 rounded-md text-white ">
               <button className="">{isCopied ? "Copied" : "Copy"}</button>
