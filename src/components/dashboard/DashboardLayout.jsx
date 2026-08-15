@@ -14,22 +14,32 @@ const DashboardLayout = () => {
   const [shortenPopUp, setShortenPopUp] = useState(false);
 
   const {
-    isLoading,
-    data: myShortenUrls,
+    data: myShortenUrls = [],
+    isLoading: isLoadingUrls,
+    isError: isUrlsError,
     refetch,
   } = useFetchMyShortUrls(token);
 
   const {
-    data: totalClicks,
+    data: totalClicks = [],
     error,
-    isError,
-    isLoading: loader,
+    isError: isClicksError,
+    isLoading: isLoadingClicks,
   } = useFetchTotalClicks(token);
+
+  const isPageLoading = isLoadingUrls || isLoadingClicks;
+  const isPageError = isUrlsError || isClicksError;
 
   return (
     <div className="lg:px-14 sm:px-8 px-4 min-h-[calc(100vh-64px)]">
-      {loader ? (
+      {isPageLoading ? (
         <Loader />
+      ) : isPageError ? (
+        <div className="flex justify-center items-center pt-20">
+          <p className="text-red-500 font-semibold text-lg">
+            Failed to load dashboard data. Please try logging in again.
+          </p>
+        </div>
       ) : (
         <div className="lg:w-[90%] w-full mx-auto py-16">
           <div className="h-96 relative">
@@ -57,7 +67,7 @@ const DashboardLayout = () => {
           </div>
 
           <div>
-            {!isLoading && myShortenUrls.length === 0 ? (
+            {!isPageLoading && myShortenUrls.length === 0 ? (
               <div className="flex justify-center pt-16">
                 <div className="flex gap-2 items-center justify-center  py-6 sm:px-8 px-5 rounded-md   shadow-lg  bg-gray-50">
                   <h1 className="text-slate-800 font-montserrat   sm:text-[18px] text-[14px] font-semibold mb-1 ">

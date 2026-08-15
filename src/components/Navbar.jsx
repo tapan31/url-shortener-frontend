@@ -3,17 +3,24 @@ import { Link, useLocation, useNavigate } from "react-router-dom";
 import { IoIosMenu } from "react-icons/io";
 import { RxCross2 } from "react-icons/rx";
 import { useStoreContext } from "../contextApi/ContextApi";
+import api from "../api/api";
 
 const Navbar = () => {
   const navigate = useNavigate();
-  const { token, setToken } = useStoreContext();
+  const { token, setToken, logout } = useStoreContext();
   const path = useLocation().pathname;
   const [navbarOpen, setNavbarOpen] = useState(false);
 
-  const onLogOutHandler = () => {
-    setToken(null);
-    localStorage.removeItem("JWT_TOKEN");
-    navigate("/login");
+  const onLogOutHandler = async () => {
+    try {
+      const refreshToken = localStorage.getItem("REFRESH_TOKEN");
+      await api.post("/api/auth/logout", { refreshToken });
+    } catch (err) {
+      console.log("Logout API call failed. Clearning locally anyway");
+    } finally {
+      logout();
+      navigate("/login");
+    }
   };
 
   return (

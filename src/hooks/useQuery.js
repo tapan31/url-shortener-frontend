@@ -5,20 +5,28 @@ export const useFetchMyShortUrls = (token) => {
   return useQuery({
     queryKey: ["my-shortenurls"],
     queryFn: async () => {
-      const { data } = await api.get("/api/urls/myurls", {
+      /* const { data } = await api.get("/api/urls/myurls", {
         headers: {
           "Content-Type": "application/json",
           Accept: "application/json",
           Authorization: `Bearer ${token}`,
         },
-      });
+      }); */
+
+      const { data } = await api.get("/api/urls/myurls");
 
       return data;
     },
     select: (data) => {
-      return data.sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt));
+      // Safe fallback if data is missing or not an array
+      if (!Array.isArray(data)) return [];
+      // Create a shallow copy before sorting to avoid mutating query cache directly
+      return [...data].sort(
+        (a, b) => new Date(b.createdAt) - new Date(a.createdAt),
+      );
     },
     staleTime: 5000,
+    enabled: !!token,
   });
 };
 
@@ -26,7 +34,7 @@ export const useFetchTotalClicks = (token) => {
   return useQuery({
     queryKey: ["url-totalclick"],
     queryFn: async () => {
-      const { data } = await api.get(
+      /* const { data } = await api.get(
         "/api/urls/totalClicks?startDate=2026-06-01&endDate=2026-07-30",
         {
           headers: {
@@ -35,6 +43,10 @@ export const useFetchTotalClicks = (token) => {
             Authorization: `Bearer ${token}`,
           },
         },
+      ); */
+
+      const { data } = await api.get(
+        "/api/urls/totalClicks?startDate=2026-06-01&endDate=2026-07-30",
       );
 
       return data;
@@ -48,6 +60,8 @@ export const useFetchTotalClicks = (token) => {
     //   };
 
     select: (data) => {
+      if (!data) return [];
+
       return Object.keys(data).map((key) => ({
         clickDate: key,
         count: data[key],

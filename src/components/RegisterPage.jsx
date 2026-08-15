@@ -32,10 +32,10 @@ const RegisterPage = () => {
       console.log("API Response: ", response);
 
       navigate("/login");
-      toast.success("Registeration Successful!");
+      toast.success("Registration Successful!");
     } catch (error) {
       console.log(error);
-      toast.error("Registeration Failed!");
+      toast.error("Registration Failed!");
     } finally {
       setLoader(false);
     }
