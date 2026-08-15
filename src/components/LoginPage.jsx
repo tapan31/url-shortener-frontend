@@ -18,7 +18,6 @@ const LoginPage = () => {
     formState: { errors },
   } = useForm({
     defaultValues: {
-      username: "",
       email: "",
       password: "",
     },
@@ -30,16 +29,21 @@ const LoginPage = () => {
 
     try {
       const { data: response } = await api.post("/api/auth/login", data);
-      localStorage.setItem("JWT_TOKEN", JSON.stringify(response.token));
-      setToken(response.token);
+      const { accessToken, refreshToken, expiresIn } = response;
+
+      localStorage.setItem("ACCESS_TOKEN", accessToken);
+      localStorage.setItem("REFRESH_TOKEN", refreshToken);
+
       reset();
+      setToken(accessToken);
+
       console.log("API Response: ", response);
       toast.success("Login Successful!");
 
       navigate("/dashboard");
     } catch (error) {
       console.log(error);
-      toast.error("Login Failed!");
+      toast.error(error.response?.data?.message || "Login Failed!");
     } finally {
       setLoader(false);
     }
